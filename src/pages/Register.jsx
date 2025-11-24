@@ -1,9 +1,9 @@
 import Layout from "../components/Layout";
 
-const AboutUs = () => {
+const Register = () => {
   return <Layout>
-    <h1>Sobre nosotros</h1>
+    <h1>Registro</h1>
   </Layout>
 };
 
-export default AboutUs;
+export default Register;
