@@ -3,7 +3,8 @@ import Layout from "../components/Layout";
 
 const Home = () => {
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true); 
+  const [user, setUser] = useState(true)
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
   const fetchingProducts = async () => {
@@ -15,7 +16,7 @@ const Home = () => {
         throw new Error("Error al traer los productos");
       }
 
-      setProducts(dataProducts.data);  // tu API devuelve { data: [...] }
+      setProducts(dataProducts.data.reverse());  // tu API devuelve { data: [...] }
     } catch (error) {
       console.log(error);
       setError(true);
@@ -24,6 +25,26 @@ const Home = () => {
     }
   };
 
+  const deleteProduct = async(idProduct) => {
+
+    if (!confirm("Estas seguro de que quieres borrar el producto")) {
+      return
+    }
+try {
+  
+  const resposnse = await fetch(`https://backend-utn-1gp5.onrender.com/products/${idProduct}`, {
+    method: "DELETE"
+  })
+
+  const dataResponse = await resposnse.json()
+
+setProducts(products.filter((p) => p._id !== idProduct))
+
+  alert(`${dataResponse.data.name} borrado con exito`)
+} catch (error) {
+  console.log("Error al borrar el producto")
+}
+  }
   useEffect(() => {
     fetchingProducts();
   }, []);
@@ -64,6 +85,7 @@ const Home = () => {
                   <p><strong>Precio:</strong> ${product.price}</p>
                   <p><strong>Stock:</strong> {product.stock}</p>
                   <p><strong>Categoría:</strong> {product.category}</p>
+                  {user && <button onClick={() => deleteProduct(product._id)}>Borrar</button>}
                 </div>
               ))}
 

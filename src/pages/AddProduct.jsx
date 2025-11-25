@@ -1,33 +1,89 @@
+import { useState } from "react";
 import Layout from "../components/Layout";
+import { data } from "react-router-dom";
 
-// AddProduct.jsx
 const AddProduct = () => {
+
+  const [formData, setFormData] = useState({
+    name: "",
+    description: "",
+    price: "",
+    stock: "",
+    category: ""
+  })
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    const dataToSend = {
+      ...formData,
+      price: Number(formData.price),
+      stock: Number(formData.stock),
+    }
+    try {
+      const response = await fetch(`https://backend-utn-1gp5.onrender.com/products`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(dataToSend)
+      })
+
+      if (!response.ok) {
+        alert("❌ Error al cargar el producto")
+        return
+      }
+      alert("✅ Producto agregado con exito")
+
+      setFormData({
+        name: "",
+        description: "",
+        price: "",
+        stock: "",
+        category: ""
+      })
+
+    } catch (error) {
+
+    }
+
+
+
+  }
+
+  const handleChange = (e) => {
+    const nombreDeInput = e.target.name
+    setFormData({ ...formData, [nombreDeInput]: e.target.value })
+  }
+
+
   return (
     <Layout>
-<div className="add-container">
+      <div className="add-container">
 
-      {/* BANNER */}
-      <section className="banner">
-        <h1>Agregar Nuevo Producto</h1>
-      </section>
+        {/* BANNER */}
+        <section className="banner">
+          <h1>Agregar Nuevo Producto</h1>
+        </section>
 
-      {/* FORMULARIO */}
-      <section className="form-section">
-        <form className="product-form">
+        {/* FORMULARIO */}
+        <section className="form-section">
+          <form className="product-form"
+            onSubmit={(e) => handleSubmit(e)}>
 
-          <input type="text" placeholder="Nombre" name="name" />
-          <input type="text" placeholder="Descripción" name="description" />
-          <input type="number" placeholder="Precio" name="price" />
-          <input type="number" placeholder="Stock" name="stock" />
-          <input type="text" placeholder="Categoría" name="category" />
+            <input type="text" placeholder="Nombre" name="name" minLength={3} maxLength={50} required onChange={(e) => handleChange(e)} value={formData.name} />
+            <input type="text" placeholder="Descripción" name="description" minLength={3} maxLength={200} onChange={(e) => handleChange(e)} value={formData.description} />
+            <input type="number" placeholder="Precio" name="price" min={0} onChange={(e) => handleChange(e)} value={formData.price} />
+            <input type="number" placeholder="Stock" name="stock" min={0} onChange={(e) => handleChange(e)} value={formData.stock} />
+            <input type="text" placeholder="Categoría" name="category" minLength={3} maxLength={20} onChange={(e) => handleChange(e)} value={formData.category} />
+            <button type="submit">Agregar Producto</button>
+          </form>
+        </section>
 
-          <button type="submit">Agregar Producto</button>
-        </form>
-      </section>
-
-    </div>
+      </div>
     </Layout>
-    
+
   );
 };
 
