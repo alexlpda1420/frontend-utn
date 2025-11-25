@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import Layout from "../components/Layout";
+import UpdateProduct from "../components/UpdateProduct";
+import { useAuth } from "../context/AuthContext";
 
 const Home = () => {
   const [products, setProducts] = useState([]);
-  const [user, setUser] = useState(true)
+  const { user } = useAuth()
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null)
@@ -33,15 +35,15 @@ const Home = () => {
     }
     try {
 
-      const resposnse = await fetch(`https://backend-utn-1gp5.onrender.com/products/${idProduct}`, {
+      const response = await fetch(`https://backend-utn-1gp5.onrender.com/products/${idProduct}`, {
         method: "DELETE"
       })
 
-      const dataResponse = await resposnse.json()
+      const dataResponse = await response.json()
 
       setProducts(products.filter((p) => p._id !== idProduct))
 
-      alert(`${dataResponse.data.name} borrado con exito`)
+      alert(`${dataResponse.data.name} borrado con éxito`)
     } catch (error) {
       console.log("Error al borrar el producto")
     }
@@ -82,10 +84,12 @@ const Home = () => {
           {error && <p>Error al cargar los productos.</p>}
 
           {
-            selectedProduct && <section>
-              Producto a editar
-              <button onClick={() => setSelectedProduct(null)}>Cancelar</button>
-            </section>
+            selectedProduct &&
+            <UpdateProduct
+              product={selectedProduct}
+              onClose={() => setSelectedProduct(null)}
+              onUpdate={fetchingProducts}
+            />
           }
           <div className="grid">
             {!loading &&
@@ -97,8 +101,12 @@ const Home = () => {
                   <p><strong>Precio:</strong> ${product.price}</p>
                   <p><strong>Stock:</strong> {product.stock}</p>
                   <p><strong>Categoría:</strong> {product.category}</p>
-                  <button onClick={() => handleUpdateProduct(product)}>Actualizar</button>
-                  {user && <button onClick={() => deleteProduct(product._id)}>Borrar</button>}
+                  {
+                    user && <div className="cont-btn">
+                      <button onClick={() => handleUpdateProduct(product)}>Actualizar</button>
+                      <button onClick={() => deleteProduct(product._id)}>Borrar</button>
+                    </div>
+                  }
                 </div>
               ))}
 

@@ -1,17 +1,36 @@
 // Layout.jsx
-import { Children } from "react";
-import { Link } from "react-router-dom";
+import { Children, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const Layout = ({ children }) => {
+  const { user, logout } = useAuth()
+  const navigateUser = useNavigate()
+  const handleLogout = () => {
+    logout()
+    navigateUser("./login")
+  }
+
   return (
     <>
       <header>
         <nav >
           <Link to="/">Nuestros Productos</Link>
           <Link to="/sobre-nosotros">Sobre Nosotros</Link>
-          <Link to="/agregar-producto">Agregar Producto</Link>
-          <Link to="/login">Login</Link>
-          <Link to="/registro">Registro</Link>
+          {
+            !user ?
+              <>
+                <Link to="/login">Login</Link>
+                <Link to="/registro">Registro</Link>
+              </>
+              :
+              <>
+                <Link to="/agregar-producto">Agregar Producto</Link>
+                <button onClick={handleLogout}>Cerrar sesión</button>
+              </>
+
+          }
+
         </nav>
       </header>
       <main >
