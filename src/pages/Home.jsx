@@ -6,6 +6,7 @@ const Home = () => {
   const [user, setUser] = useState(true)
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null)
 
   const fetchingProducts = async () => {
     try {
@@ -25,29 +26,34 @@ const Home = () => {
     }
   };
 
-  const deleteProduct = async(idProduct) => {
+  const deleteProduct = async (idProduct) => {
 
     if (!confirm("Estas seguro de que quieres borrar el producto")) {
       return
     }
-try {
-  
-  const resposnse = await fetch(`https://backend-utn-1gp5.onrender.com/products/${idProduct}`, {
-    method: "DELETE"
-  })
+    try {
 
-  const dataResponse = await resposnse.json()
+      const resposnse = await fetch(`https://backend-utn-1gp5.onrender.com/products/${idProduct}`, {
+        method: "DELETE"
+      })
 
-setProducts(products.filter((p) => p._id !== idProduct))
+      const dataResponse = await resposnse.json()
 
-  alert(`${dataResponse.data.name} borrado con exito`)
-} catch (error) {
-  console.log("Error al borrar el producto")
-}
+      setProducts(products.filter((p) => p._id !== idProduct))
+
+      alert(`${dataResponse.data.name} borrado con exito`)
+    } catch (error) {
+      console.log("Error al borrar el producto")
+    }
   }
   useEffect(() => {
     fetchingProducts();
   }, []);
+
+  const handleUpdateProduct = (product) => {
+    console.log(product, "producto a actualizar")
+    setSelectedProduct(product)
+  }
 
   return (
     <Layout>
@@ -75,6 +81,12 @@ setProducts(products.filter((p) => p._id !== idProduct))
           {loading && <p>Cargando productos...</p>}
           {error && <p>Error al cargar los productos.</p>}
 
+          {
+            selectedProduct && <section>
+              Producto a editar
+              <button onClick={() => setSelectedProduct(null)}>Cancelar</button>
+            </section>
+          }
           <div className="grid">
             {!loading &&
               !error &&
@@ -85,6 +97,7 @@ setProducts(products.filter((p) => p._id !== idProduct))
                   <p><strong>Precio:</strong> ${product.price}</p>
                   <p><strong>Stock:</strong> {product.stock}</p>
                   <p><strong>Categoría:</strong> {product.category}</p>
+                  <button onClick={() => handleUpdateProduct(product)}>Actualizar</button>
                   {user && <button onClick={() => deleteProduct(product._id)}>Borrar</button>}
                 </div>
               ))}
