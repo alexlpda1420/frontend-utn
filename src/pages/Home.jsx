@@ -14,10 +14,10 @@ const Home = () => {
   const [selectedProduct, setSelectedProduct] = useState(null)
   const [filters, setFilters] = useState({
     name: "",
-    stock: 0,
+    stock: "",
     category: "",
-    minPrice: 0,
-    maxPrice: 0
+    minPrice: "",
+    maxPrice: ""
   })
 
   const fetchingProducts = async (query = "") => {
@@ -75,16 +75,27 @@ const Home = () => {
   }
 
   const handleSubmit = (e) => {
-    e.preventDefaults()
-    const query = new URLSearchParams()
+    e.preventDefault();
 
-    if (filter.name) query.append("name", filters.name)
-    if (filter.stock) query.append("stock", filters.stock)
-    if (filter.category) query.append("category", filters.category)
-    if (filter.minPrice) query.append("minPrice", filters.minPrice)
-    if (filter.maxPrice) query.append("maxPrice", filters.maxPrice)
-    console.log(query.toString())
-    fetchingProducts()
+    const query = new URLSearchParams();
+
+    if (filters.name.trim() !== "") query.append("name", filters.name.trim());
+    if (filters.stock !== "") query.append("stock", Number(filters.stock));
+    if (filters.category !== "") query.append("category", filters.category);
+    if (filters.minPrice !== "") query.append("minPrice", Number(filters.minPrice));
+    if (filters.maxPrice !== "") query.append("maxPrice", Number(filters.maxPrice));
+
+    fetchingProducts(query.toString());
+  };
+
+  const handleResetFilters = () => {
+    setFilters({
+      name: "",
+      stock: "",
+      category: "",
+      minPrice: "",
+      maxPrice: ""
+    })
   }
 
   return (
@@ -107,17 +118,18 @@ const Home = () => {
 
         <section>
           <form className="filters-form" onSubmit={handleSubmit}>
-            <input type="text" name="name" placeholder="Buscar por nombre" onChange={handleChange} />
-            <input type="number" name="stock" placeholder="Ingrese el stock" onChange={handleChange} />
-            <select name="category" onChange={handleChange}>
+            <input type="text" name="name" placeholder="Buscar por nombre" onChange={handleChange} value={filters.name} />
+            <input type="number" name="stock" placeholder="Ingrese el stock" onChange={handleChange} value={filters.stock} />
+            <select name="category" onChange={handleChange} value={filters.category}>
+              <option selected>Todas las categorias</option>
               {
                 CATEGORIES.map((category) => <option key={category.id} value={category.value}>{category.content}</option>)
               }
             </select>
-            <input type="number" name="minPrice" placeholder="Precio mínimo" onChange={handleChange} />
-            <input type="number" name="maxPrice" placeholder="Precio máximo" onChange={handleChange} />
+            <input type="number" name="minPrice" placeholder="Precio mínimo" onChange={handleChange} value={filters.minPrice} />
+            <input type="number" name="maxPrice" placeholder="Precio máximo" onChange={handleChange} value={filters.maxPrice} />
             <button type="submit">Aplicar filtros</button>
-            <button type="button">Cancelar</button>
+            <button type="button" onClick={handleResetFilters}>Cancelar</button>
 
           </form>
         </section>

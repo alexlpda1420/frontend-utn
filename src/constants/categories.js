@@ -15,7 +15,8 @@ const CATEGORIES = [
   { id: 14, value: "oficina", content: "Oficina y Papelería" },
   { id: 15, value: "alimentos", content: "Alimentos y Bebidas" },
   { id: 16, value: "herramientas", content: "Herramientas" },
-  { id: 17, value: "construccion", content: "Construcción" }
+  { id: 17, value: "construccion", content: "Construcción" },
+  { id: 18, value: "ropa", content: "Ropa" }
 ]
 
 export { CATEGORIES }
