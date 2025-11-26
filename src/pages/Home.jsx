@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import UpdateProduct from "../components/UpdateProduct";
 import { useAuth } from "../context/AuthContext";
+import { CATEGORIES } from "../constants/categories.js"
+
+
 
 const Home = () => {
   const [products, setProducts] = useState([]);
@@ -9,10 +12,17 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null)
+  const [filters, setFilters] = useState({
+    name: "",
+    stock: 0,
+    category: "",
+    minPrice: 0,
+    maxPrice: 0
+  })
 
-  const fetchingProducts = async () => {
+  const fetchingProducts = async (query = "") => {
     try {
-      const response = await fetch("https://backend-utn-1gp5.onrender.com/products");
+      const response = await fetch(`https://backend-utn-1gp5.onrender.com/products?${query}`);
       const dataProducts = await response.json();
 
       if (!response.ok) {
@@ -57,6 +67,26 @@ const Home = () => {
     setSelectedProduct(product)
   }
 
+  const handleChange = (e) => {
+    setFilters({
+      ...filters,
+      [e.target.name]: e.target.value
+    })
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefaults()
+    const query = new URLSearchParams()
+
+    if (filter.name) query.append("name", filters.name)
+    if (filter.stock) query.append("stock", filters.stock)
+    if (filter.category) query.append("category", filters.category)
+    if (filter.minPrice) query.append("minPrice", filters.minPrice)
+    if (filter.maxPrice) query.append("maxPrice", filters.maxPrice)
+    console.log(query.toString())
+    fetchingProducts()
+  }
+
   return (
     <Layout>
       <div className="home-container">
@@ -73,6 +103,23 @@ const Home = () => {
             Ofrecemos calidad, variedad y un enfoque pensado para brindarte la mejor experiencia.
             Este es solo un texto de ejemplo hasta conectar la API real.
           </p>
+        </section>
+
+        <section>
+          <form className="filters-form" onSubmit={handleSubmit}>
+            <input type="text" name="name" placeholder="Buscar por nombre" onChange={handleChange} />
+            <input type="number" name="stock" placeholder="Ingrese el stock" onChange={handleChange} />
+            <select name="category" onChange={handleChange}>
+              {
+                CATEGORIES.map((category) => <option key={category.id} value={category.value}>{category.content}</option>)
+              }
+            </select>
+            <input type="number" name="minPrice" placeholder="Precio mínimo" onChange={handleChange} />
+            <input type="number" name="maxPrice" placeholder="Precio máximo" onChange={handleChange} />
+            <button type="submit">Aplicar filtros</button>
+            <button type="button">Cancelar</button>
+
+          </form>
         </section>
 
         {/* GRID DE PRODUCTOS */}
