@@ -3,12 +3,13 @@ import Layout from "../components/Layout";
 import UpdateProduct from "../components/UpdateProduct";
 import { useAuth } from "../context/AuthContext";
 import { CATEGORIES } from "../constants/categories.js"
+import { data } from "react-router-dom";
 
 
 
 const Home = () => {
   const [products, setProducts] = useState([]);
-  const { user } = useAuth()
+  const { user , token} = useAuth()
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null)
@@ -19,10 +20,10 @@ const Home = () => {
     minPrice: "",
     maxPrice: ""
   })
-
+  console.log(user, "payload en home")
   const fetchingProducts = async (query = "") => {
     try {
-      const response = await fetch(`https://backend-utn-1gp5.onrender.com/products?${query}`);
+      const response = await fetch(`http://localhost:3000/products?${query}`);
       const dataProducts = await response.json();
 
       if (!response.ok) {
@@ -45,11 +46,19 @@ const Home = () => {
     }
     try {
 
-      const response = await fetch(`https://backend-utn-1gp5.onrender.com/products/${idProduct}`, {
-        method: "DELETE"
+      const response = await fetch(`http://localhost:3000/products/${idProduct}`, {
+        method: "DELETE",
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
       })
 
       const dataResponse = await response.json()
+
+      if (dataResponse.error) {
+        alert(dataResponse.error)
+        return
+      }
 
       setProducts(products.filter((p) => p._id !== idProduct))
 
@@ -110,7 +119,7 @@ const Home = () => {
         {/* TEXTO DESCRIPTIVO */}
         <section className="intro">
           <p>
-            En nuestra tienda encontrarás productos seleccionados con cuidado y dedicación.
+            Bienvenido {user && user.id} En nuestra tienda encontrarás productos seleccionados con cuidado y dedicación.
             Ofrecemos calidad, variedad y un enfoque pensado para brindarte la mejor experiencia.
             Este es solo un texto de ejemplo hasta conectar la API real.
           </p>
@@ -121,7 +130,7 @@ const Home = () => {
             <input type="text" name="name" placeholder="Buscar por nombre" onChange={handleChange} value={filters.name} />
             <input type="number" name="stock" placeholder="Ingrese el stock" onChange={handleChange} value={filters.stock} />
             <select name="category" onChange={handleChange} value={filters.category}>
-              <option selected>Todas las categorias</option>
+              <option defaultValue>Todas las categorias</option>
               {
                 CATEGORIES.map((category) => <option key={category.id} value={category.value}>{category.content}</option>)
               }
