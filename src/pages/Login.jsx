@@ -12,10 +12,10 @@ const Login = () => {
   const { login } = useAuth()
   const navigateUser = useNavigate()
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      const response = await fetch("http://localhost:3000/auth/login", {
+      const response = await fetch("https://backend-utn-1gp5.onrender.com/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -24,15 +24,14 @@ const Login = () => {
       })
       const responseData = await response.json()
 
-      if (responseData.error)
-      {
+      if (responseData.error) {
         alert(responseData.error)
         return
       }
 
       login(responseData.token)
       navigateUser("/")
- 
+
     } catch (error) {
       console.log(error)
     }

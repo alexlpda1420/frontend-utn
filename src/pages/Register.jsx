@@ -24,10 +24,10 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      const response = await fetch("http://localhost:3000/auth/register", {
+      const response = await fetch("https://backend-utn-1gp5.onrender.com/auth/register", {
         method: "POST",
         headers: {
-          "Content-Type":"application/json"
+          "Content-Type": "application/json"
         },
         body: JSON.stringify(formData)
       })

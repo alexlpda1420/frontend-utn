@@ -28,7 +28,7 @@ const AddProduct = () => {
     }
     try {
 
-      const response = await fetch(`http://localhost:3000/products`, {
+      const response = await fetch(`https://backend-utn-1gp5.onrender.com/products`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

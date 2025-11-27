@@ -9,7 +9,7 @@ import { data } from "react-router-dom";
 
 const Home = () => {
   const [products, setProducts] = useState([]);
-  const { user , token} = useAuth()
+  const { user, token } = useAuth()
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null)
@@ -23,7 +23,8 @@ const Home = () => {
   console.log(user, "payload en home")
   const fetchingProducts = async (query = "") => {
     try {
-      const response = await fetch(`http://localhost:3000/products?${query}`);
+
+      const response = await fetch(`https://backend-utn-1gp5.onrender.com/products?${query}`);
       const dataProducts = await response.json();
 
       if (!response.ok) {
@@ -46,7 +47,7 @@ const Home = () => {
     }
     try {
 
-      const response = await fetch(`http://localhost:3000/products/${idProduct}`, {
+      const response = await fetch(`https://backend-utn-1gp5.onrender.com/products/${idProduct}`, {
         method: "DELETE",
         headers: {
           "Authorization": `Bearer ${token}`
