@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import UpdateProduct from "../components/UpdateProduct";
 import { useAuth } from "../context/AuthContext";
-import { CATEGORIES } from "../constants/categories.js"
-import { data } from "react-router-dom";
+import { CATEGORIES } from "../constants/categories.js";
+import { ToastMessage } from "../components/ToastMessage.jsx";
 
 
 
@@ -11,7 +11,7 @@ const Home = () => {
   const [products, setProducts] = useState([]);
   const { user, token } = useAuth()
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState(null)
   const [filters, setFilters] = useState({
     name: "",
@@ -20,8 +20,9 @@ const Home = () => {
     minPrice: "",
     maxPrice: ""
   })
-  console.log(user, "payload en home")
+
   const fetchingProducts = async (query = "") => {
+    setError(null)
     try {
 
       const response = await fetch(`https://backend-utn-1gp5.onrender.com/products?${query}`);
@@ -34,7 +35,7 @@ const Home = () => {
       setProducts(dataProducts.data.reverse());  // tu API devuelve { data: [...] }
     } catch (error) {
       console.log(error);
-      setError(true);
+      setError("Error al traer los productos");
     } finally {
       setLoading(false);
     }
@@ -64,8 +65,11 @@ const Home = () => {
       setProducts(products.filter((p) => p._id !== idProduct))
 
       alert(`${dataResponse.data.name} borrado con éxito`)
+      
     } catch (error) {
-      console.log("Error al borrar el producto")
+      setError("Error al borrar el producto")
+    
+      // console.log("Error al borrar el producto")
     }
   }
   useEffect(() => {
@@ -131,7 +135,7 @@ const Home = () => {
             <input type="text" name="name" placeholder="Buscar por nombre" onChange={handleChange} value={filters.name} />
             <input type="number" name="stock" placeholder="Ingrese el stock" onChange={handleChange} value={filters.stock} />
             <select name="category" onChange={handleChange} value={filters.category}>
-              <option defaultValue>Todas las categorias</option>
+              <option defaultValue>Todas las categorías</option>
               {
                 CATEGORIES.map((category) => <option key={category.id} value={category.value}>{category.content}</option>)
               }
@@ -150,7 +154,7 @@ const Home = () => {
 
           {/* ESTADOS */}
           {loading && <p>Cargando productos...</p>}
-          {error && <p>Error al cargar los productos.</p>}
+          {error && <p>Error al cargar los productos</p>}
 
           {
             selectedProduct &&
@@ -179,14 +183,20 @@ const Home = () => {
                 </div>
               ))}
 
+
             {/* Si no hay productos */}
             {!loading && products.length === 0 && !error && (
               <p>No hay productos disponibles.</p>
             )}
           </div>
         </section>
+
       </div>
+
+      {error && <ToastMessage error={error} color={"red"} />}
+      
     </Layout>
+    
   );
 };
 

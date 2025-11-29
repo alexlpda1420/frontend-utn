@@ -53,7 +53,7 @@ const UpdateProduct = ({ product, onClose, onUpdate }) => {
   return <section className="modal-overlay">
     <div className="modal-box">
       <h2>Editar producto</h2>
-      <form className="form-container update-form" onSubmit={handleSubmit}>
+      <form className="form-container contact-form" onSubmit={handleSubmit}>
         <input name="name" type="text" placeholder="Nombre del producto" value={formData.name} onChange={handleChange} />
         <input name="description" type="text" placeholder="Descripcion del producto" value={formData.description} onChange={handleChange} />
         <input name="price" type="number" placeholder="Precio del producto" value={formData.price} onChange={handleChange} />

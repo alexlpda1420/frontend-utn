@@ -50,7 +50,7 @@ const Register = () => {
 
         <h1>Registro</h1>
 
-        <form className="auth-form" onSubmit={handleSubmit}>
+        <form className="contact-form" onSubmit={handleSubmit}>
           <input type="email" placeholder="Email" name="email" onChange={handleChange} />
           <input type="password" placeholder="Contraseña" name="password" onChange={handleChange} />
           <button type="submit">Crear Cuenta</button>

@@ -78,7 +78,7 @@ const AddProduct = () => {
 
         {/* FORMULARIO */}
         <section className="form-section">
-          <form className="product-form"
+          <form className="contact-form"
             onSubmit={(e) => handleSubmit(e)}>
 
             <input type="text" placeholder="Nombre" name="name" minLength={3} maxLength={50} required onChange={(e) => handleChange(e)} value={formData.name} />

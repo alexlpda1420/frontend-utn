@@ -50,7 +50,7 @@ const Login = () => {
 
         <h1>Login</h1>
 
-        <form className="auth-form" onSubmit={handleSubmit}>
+        <form className="contact-form" onSubmit={handleSubmit}>
           <input type="email" placeholder="Email" name="email" onChange={handleChange} />
           <input type="password" placeholder="Contraseña" name="password" onChange={handleChange} />
           <button type="submit" >Iniciar Sesión</button>
