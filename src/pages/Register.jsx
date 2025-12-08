@@ -33,8 +33,9 @@ const Register = () => {
       })
       const responseData = await response.json()
 
-      if (!responseData.success) {
-        alert(responseData.error)
+      if (!response.ok || !responseData.success) {
+        alert(responseData.error || "Error al registrar el usuario")
+        return
       }
 
       alert("✅ Usuario creado con éxito")
