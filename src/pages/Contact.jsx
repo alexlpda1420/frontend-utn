@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Layout from "../components/Layout";
+import { useNavigate } from "react-router-dom";
 
 export default function Contact() {
   const [form, setForm] = useState({
@@ -8,6 +9,7 @@ export default function Contact() {
     message: ""
   });
 
+  const navigate = useNavigate()
   const handleChange = (e) => {
     setForm({
       ...form,
@@ -28,6 +30,9 @@ export default function Contact() {
       const dataResponse = await response.json()
 
       console.log(dataResponse)
+      alert("✅ Formulario enviado con éxito")
+      navigate("/")
+
     } catch (error) {
       console.log(error)
     }
