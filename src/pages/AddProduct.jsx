@@ -1,76 +1,88 @@
-import { useState } from "react";
-import Layout from "../components/Layout";
-import { data, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useState } from "react"
+import Layout from "../components/Layout"
+import { useNavigate } from "react-router-dom"
+import { useAuth } from "../context/AuthContext"
 
 const AddProduct = () => {
-
   const [formData, setFormData] = useState({
     name: "",
     description: "",
     price: "",
     stock: "",
-    category: ""
+    category: "",
   })
 
-  const navigate = useNavigate()
+  const [imageFile, setImageFile] = useState(null)
 
+  const navigate = useNavigate()
   const { token } = useAuth()
 
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setFormData((prev) => ({ ...prev, [name]: value }))
+  }
+
+  const handleFileChange = (e) => {
+    const file = e.target.files?.[0] || null
+    setImageFile(file)
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    const dataToSend = {
-      ...formData,
-      price: Number(formData.price),
-      stock: Number(formData.stock),
+    // Armamos FormData porque hay (o puede haber) archivo
+    const formDataToSend = new FormData()
+    formDataToSend.append("name", formData.name)
+    formDataToSend.append("description", formData.description)
+    formDataToSend.append("price", formData.price)   // el backend hace Number()
+    formDataToSend.append("stock", formData.stock)
+    formDataToSend.append("category", formData.category)
+
+    if (imageFile) {
+      formDataToSend.append("image", imageFile)
     }
+
     try {
+      const response = await fetch(
+        "https://backend-utn-1gp5.onrender.com/products",
+        {
+          method: "POST",
+          headers: {
+            // NO poner Content-Type, el navegador lo arma solo para multipart
+            Authorization: `Bearer ${token}`,
+          },
+          body: formDataToSend,
+        }
+      )
 
-      const response = await fetch(`https://backend-utn-1gp5.onrender.com/products`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify(dataToSend)
-      })
+      const responseData = await response.json().catch(() => ({}))
 
-      if (!response.ok) {
-        alert("❌ Error al cargar el producto")
+      if (!response.ok || responseData.success === false) {
+        console.log("Error backend:", responseData)
+        alert(responseData.error || "❌ Error al cargar el producto")
         return
       }
-      alert("✅ Producto agregado con exito")
+
+      alert("✅ Producto agregado con éxito")
 
       setFormData({
         name: "",
         description: "",
         price: "",
         stock: "",
-        category: ""
+        category: "",
       })
+      setImageFile(null)
       navigate("/")
-
-
     } catch (error) {
-
+      console.error("Error al crear producto:", error)
+      alert("❌ Error al cargar el producto")
     }
-
-
-
   }
-
-  const handleChange = (e) => {
-    const nombreDeInput = e.target.name
-    setFormData({ ...formData, [nombreDeInput]: e.target.value })
-  }
-
 
   return (
     <Layout>
-      <div className="add-container">
-
+      <div className="home-container">
         {/* BANNER */}
         <section className="banner">
           <h1>Agregar Nuevo Producto</h1>
@@ -78,22 +90,68 @@ const AddProduct = () => {
 
         {/* FORMULARIO */}
         <section className="form-section">
-          <form className="contact-form"
-            onSubmit={(e) => handleSubmit(e)}>
+          <form className="contact-form" onSubmit={handleSubmit}>
+            <input
+              type="text"
+              placeholder="Nombre"
+              name="name"
+              minLength={4}
+              required
+              onChange={handleChange}
+              value={formData.name}
+            />
+            <input
+              type="text"
+              placeholder="Descripción"
+              name="description"
+              minLength={10}
+              required
+              onChange={handleChange}
+              value={formData.description}
+            />
+            <input
+              type="number"
+              placeholder="Precio"
+              name="price"
+              min={0}
+              required
+              onChange={handleChange}
+              value={formData.price}
+            />
+            <input
+              type="number"
+              placeholder="Stock"
+              name="stock"
+              min={0}
+              required
+              onChange={handleChange}
+              value={formData.stock}
+            />
+            <input
+              type="text"
+              placeholder="Categoría"
+              name="category"
+              minLength={2}
+              required
+              onChange={handleChange}
+              value={formData.category}
+            />
 
-            <input type="text" placeholder="Nombre" name="name" minLength={3} maxLength={50} required onChange={(e) => handleChange(e)} value={formData.name} />
-            <input type="text" placeholder="Descripción" name="description" minLength={3} maxLength={200} onChange={(e) => handleChange(e)} value={formData.description} />
-            <input type="number" placeholder="Precio" name="price" min={0} onChange={(e) => handleChange(e)} value={formData.price} />
-            <input type="number" placeholder="Stock" name="stock" min={0} onChange={(e) => handleChange(e)} value={formData.stock} />
-            <input type="text" placeholder="Categoría" name="category" minLength={3} maxLength={20} onChange={(e) => handleChange(e)} value={formData.category} />
+            {/* input para imagen */}
+            <input
+              type="file"
+              accept="image/*"
+              name="image"
+              onChange={handleFileChange}
+            />
+
             <button type="submit">Agregar Producto</button>
           </form>
         </section>
 
       </div>
     </Layout>
+  )
+}
 
-  );
-};
-
-export default AddProduct;
+export default AddProduct

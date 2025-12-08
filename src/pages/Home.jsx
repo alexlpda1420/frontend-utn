@@ -65,10 +65,10 @@ const Home = () => {
       setProducts(products.filter((p) => p._id !== idProduct))
 
       alert(`${dataResponse.data.name} borrado con éxito`)
-      
+
     } catch (error) {
       setError("Error al borrar el producto")
-    
+
       // console.log("Error al borrar el producto")
     }
   }
@@ -168,12 +168,18 @@ const Home = () => {
             {!loading &&
               !error &&
               products.map((product) => (
+                
                 <div key={product._id} className="product-card">
                   <h3>{product.name}</h3>
                   <p><strong>Descripción:</strong> {product.description}</p>
                   <p><strong>Precio:</strong> ${product.price}</p>
                   <p><strong>Stock:</strong> {product.stock}</p>
                   <p><strong>Categoría:</strong> {product.category}</p>
+                  <img className="product-image"
+                    src={`https://backend-utn-1gp5.onrender.com/${product.image}`}
+                    alt={product.name}
+                  />
+
                   {
                     user && <div className="cont-btn">
                       <button onClick={() => handleUpdateProduct(product)}>Actualizar</button>
@@ -194,9 +200,9 @@ const Home = () => {
       </div>
 
       {error && <ToastMessage error={error} color={"red"} />}
-      
+
     </Layout>
-    
+
   );
 };
 
