@@ -301,15 +301,16 @@ footer {
 
 /* Imagen dentro de la card */
 .product-card img.product-image {
-  width: 100%;
-  max-height: 190px;
-  object-fit: cover;
-  border-radius: 10px;
   display: block;
-  margin-top: 0.6rem;
+  width: 100%;
+  height: auto;              /* mantiene proporciones */
+  max-height: 260px;         /* límite razonable en desktop */
+  object-fit: contain;       /* no recorta, muestra la imagen completa */
+  border-radius: 10px;
+  margin: 0.75rem auto 0;
   border: 1px solid rgba(148, 163, 184, 0.45);
+  background-color: #020617; /* por si la imagen tiene fondo transparente */
 }
-
 /* Botones dentro de la card */
 .cont-btn {
   display: flex;
@@ -707,6 +708,17 @@ footer {
     padding-inline: 0.2rem;
   }
 }
+
+@media (max-width: 768px) {
+  .product-card {
+    padding: 1rem 0.9rem 1.1rem;
+  }
+
+  .product-card img.product-image {
+    max-height: 220px;   /* un poco menos alta en celulares */
+  }
+}
+
 
 /* Contenedor específico de la página de contacto */
 .contact-page {
