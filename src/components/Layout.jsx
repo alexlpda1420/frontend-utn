@@ -27,6 +27,7 @@ const Layout = ({ children }) => {
               :
               <>
                 <Link to="/agregar-producto">Agregar Producto</Link>
+                <Link to="/perfil">Mi Perfil</Link>
                 <button onClick={handleLogout}>Cerrar sesión</button>
               </>
 
