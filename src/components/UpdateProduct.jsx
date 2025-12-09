@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useAuth } from "../context/AuthContext"
+import { CATEGORIES } from "../constants/categories"
 import Swal from "sweetalert2"
 
 
@@ -87,7 +88,19 @@ const UpdateProduct = ({ product, onClose, onUpdate }) => {
         <input name="description" type="text" placeholder="Descripcion del producto" value={formData.description} onChange={handleChange} />
         <input name="price" type="number" placeholder="Precio del producto" value={formData.price} onChange={handleChange} />
         <input name="stock" type="number" placeholder="Stock del producto" value={formData.stock} onChange={handleChange} />
-        <input name="category" type="text" placeholder="Categoría del producto" value={formData.category} onChange={handleChange} />
+        <select
+          name="category"
+          value={formData.category}
+          onChange={handleChange}
+        >
+          <option value="">Seleccionar categoría</option>
+          {CATEGORIES.map((category) => (
+            <option key={category.id} value={category.value}>
+              {category.content}
+            </option>
+          ))}
+        </select>
+
 
         <button type="submit">{loader ? "Enviando..." : "Enviar"}</button>
       </form>

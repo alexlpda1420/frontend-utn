@@ -2,6 +2,7 @@ import { useState } from "react"
 import Layout from "../components/Layout"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
+import { CATEGORIES } from "../constants/categories"
 import Swal from "sweetalert2"
 
 const AddProduct = () => {
@@ -60,7 +61,7 @@ const AddProduct = () => {
 
       if (!response.ok || responseData.success === false) {
         console.log("Error backend:", responseData)
-         Swal.fire({
+        Swal.fire({
           icon: "error",
           title: "Error al cargar el producto",
           text: responseData.error || "Revisá los datos ingresados.",
@@ -68,7 +69,7 @@ const AddProduct = () => {
         return
       }
 
-       await Swal.fire({
+      await Swal.fire({
         icon: "success",
         title: "Producto agregado",
         text: "El producto se creó correctamente.",
@@ -138,15 +139,20 @@ const AddProduct = () => {
               onChange={handleChange}
               value={formData.stock}
             />
-            <input
-              type="text"
-              placeholder="Categoría"
+            <select
               name="category"
-              minLength={2}
-              required
-              onChange={handleChange}
               value={formData.category}
-            />
+              onChange={handleChange}
+              required
+            >
+              <option value="">Seleccionar categoría</option>
+              {CATEGORIES.map((category) => (
+                <option key={category.id} value={category.value}>
+                  {category.content}
+                </option>
+              ))}
+            </select>
+
 
             {/* input para imagen */}
             <input
