@@ -9,6 +9,7 @@ import ProtectedRoute from "../components/ProtectedRoute";
 import Contact from "../pages/Contact";
 import PageNotFound from "../pages/PageNotFound";
 import Profile from "../pages/Profile";
+import Cart from "../pages/Cart";
 
 const RouterApp = () => {
   return (
@@ -26,7 +27,8 @@ const RouterApp = () => {
         <Route path="/contacto" element={<Contact/>}></Route>
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<Register />} />
-        <Route path="/perfil" element={ <ProtectedRoute><Profile/></ProtectedRoute>} />
+        <Route path="/perfil" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+        <Route path="/carrito" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
         <Route path="*" element={<PageNotFound/>} />
       </Routes>
     </BrowserRouter>
