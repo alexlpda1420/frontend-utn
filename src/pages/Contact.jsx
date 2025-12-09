@@ -60,47 +60,47 @@ export default function Contact() {
   };
 
   return (
-    <Layout>
-      <h1>Contacto</h1>
+        <Layout>
+      <div className="contact-page">
+        <h1>Contacto</h1>
 
-      <form className="contact-form" onSubmit={handleSubmit}>
+        <form className="contact-form" onSubmit={handleSubmit}>
+          <div>
+            <label>Correo electrónico</label>
+            <input
+              type="email"
+              name="email"
+              required
+              value={form.email}
+              onChange={handleChange}
+            />
+          </div>
 
+          <div>
+            <label>Asunto</label>
+            <input
+              type="text"
+              name="subject"
+              required
+              value={form.subject}
+              onChange={handleChange}
+            />
+          </div>
 
-        <div>
-          <label>Correo electrónico</label>
-          <input
-            type="email"
-            name="email"
-            required
-            value={form.email}
-            onChange={handleChange}
-          />
-        </div>
+          <div>
+            <label>Mensaje</label>
+            <textarea
+              name="message"
+              required
+              rows="4"
+              value={form.message}
+              onChange={handleChange}
+            />
+          </div>
 
-        <div>
-          <label>Asunto</label>
-          <input
-            type="text"
-            name="subject"
-            required
-            value={form.subject}
-            onChange={handleChange}
-          />
-        </div>
-
-        <div>
-          <label>Mensaje</label>
-          <textarea
-            name="message"
-            required
-            rows="4"
-            value={form.message}
-            onChange={handleChange}
-          />
-        </div>
-
-        <button type="submit">Enviar</button>
-      </form>
+          <button type="submit">Enviar</button>
+        </form>
+      </div>
     </Layout>
   );
 }
