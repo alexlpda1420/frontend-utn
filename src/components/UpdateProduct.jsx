@@ -39,12 +39,22 @@ const UpdateProduct = ({ product, onClose, onUpdate }) => {
         body: JSON.stringify(dataToUpdate)
 
       })
+      const responseData = await response.json().catch(() => ({}))
+
+      if (!response.ok || responseData.success === false) {
+        console.error("Error backend al actualizar:", responseData)
+        alert(responseData.error || "Error al actualizar el producto")
+        return
+      }
+
+      // refresca lista en Home
       onUpdate()
+      // cierra modal
       onClose()
 
-
     } catch (error) {
-      console.log("Error al actualizar")
+      console.error("Error al actualizar producto:", error)
+      alert("Error al actualizar el producto")
     } finally {
       setLoader(false)
     }

@@ -23,12 +23,13 @@ const Home = () => {
 
   const fetchingProducts = async (query = "") => {
     setError(null)
+    setLoading(true)
     try {
 
       const response = await fetch(`https://backend-utn-1gp5.onrender.com/products?${query}`);
       const dataProducts = await response.json();
 
-      if (!response.ok) {
+      if (!response.ok || dataProducts.success === false) {
         throw new Error("Error al traer los productos");
       }
 
@@ -42,36 +43,37 @@ const Home = () => {
   };
 
   const deleteProduct = async (idProduct) => {
+    if (!confirm("¿Estás seguro de que quieres borrar el producto?")) return
 
-    if (!confirm("Estas seguro de que quieres borrar el producto")) {
-      return
-    }
+
+
     try {
 
       const response = await fetch(`https://backend-utn-1gp5.onrender.com/products/${idProduct}`, {
         method: "DELETE",
         headers: {
-          "Authorization": `Bearer ${token}`
+          Authorization: `Bearer ${token}`
         }
       })
 
       const dataResponse = await response.json()
 
-      if (dataResponse.error) {
-        alert(dataResponse.error)
+      if (!response.ok || dataResponse.success === false) {
+        alert(dataResponse.error || "Error al borrar el producto")
         return
       }
 
-      setProducts(products.filter((p) => p._id !== idProduct))
+      setProducts((prev) => prev.filter((p) => p._id !== idProduct))
 
-      alert(`${dataResponse.data.name} borrado con éxito`)
-
+      // si tu backend devuelve message, usamos eso
+      alert(dataResponse.message || "Producto borrado con éxito")
     } catch (error) {
+      console.error(error)
       setError("Error al borrar el producto")
 
-      // console.log("Error al borrar el producto")
     }
   }
+  
   useEffect(() => {
     fetchingProducts();
   }, []);
@@ -110,6 +112,7 @@ const Home = () => {
       minPrice: "",
       maxPrice: ""
     })
+    fetchingProducts()
   }
 
   return (
@@ -135,7 +138,7 @@ const Home = () => {
             <input type="text" name="name" placeholder="Buscar por nombre" onChange={handleChange} value={filters.name} />
             <input type="number" name="stock" placeholder="Ingrese el stock" onChange={handleChange} value={filters.stock} />
             <select name="category" onChange={handleChange} value={filters.category}>
-              <option defaultValue>Todas las categorías</option>
+              <option value="">Todas las categorías</option>
               {
                 CATEGORIES.map((category) => <option key={category.id} value={category.value}>{category.content}</option>)
               }
@@ -148,49 +151,70 @@ const Home = () => {
           </form>
         </section>
 
-        {/* GRID DE PRODUCTOS */}
+       {/* GRID DE PRODUCTOS */}
         <section className="product-grid">
           <h2>Listado de Productos</h2>
 
-          {/* ESTADOS */}
+          
           {loading && <p>Cargando productos...</p>}
           {error && <p>Error al cargar los productos</p>}
 
-          {
-            selectedProduct &&
+          {selectedProduct && (
             <UpdateProduct
               product={selectedProduct}
               onClose={() => setSelectedProduct(null)}
               onUpdate={fetchingProducts}
             />
-          }
+          )}
+
           <div className="grid">
             {!loading &&
               !error &&
-              products.map((product) => (
-                
-                <div key={product._id} className="product-card">
-                  <h3>{product.name}</h3>
-                  <p><strong>Descripción:</strong> {product.description}</p>
-                  <p><strong>Precio:</strong> ${product.price}</p>
-                  <p><strong>Stock:</strong> {product.stock}</p>
-                  <p><strong>Categoría:</strong> {product.category}</p>
-                  <img className="product-image"
-                    src={`https://backend-utn-1gp5.onrender.com/${product.image}`}
-                    alt={product.name}
-                  />
+              products.map((product) => {
+                const hasImage =
+                  product.image &&
+                  typeof product.image === "string" &&
+                  product.image.startsWith("uploads/")
 
-                  {
-                    user && <div className="cont-btn">
-                      <button onClick={() => handleUpdateProduct(product)}>Actualizar</button>
-                      <button onClick={() => deleteProduct(product._id)}>Borrar</button>
-                    </div>
-                  }
-                </div>
-              ))}
+                return (
+                  <div key={product._id} className="product-card">
+                    <h3>{product.name}</h3>
+                    <p>
+                      <strong>Descripción:</strong> {product.description}
+                    </p>
+                    <p>
+                      <strong>Precio:</strong> ${product.price}
+                    </p>
+                    <p>
+                      <strong>Stock:</strong> {product.stock}
+                    </p>
+                    <p>
+                      <strong>Categoría:</strong> {product.category}
+                    </p>
 
+                    {hasImage && (
+                      <img
+                        className="product-image"
+                        src={`https://backend-utn-1gp5.onrender.com/${product.image}`}
+                        alt={product.name}
+                      />
+                    )}
 
-            {/* Si no hay productos */}
+                    {user && (
+                      <div className="cont-btn">
+                        <button onClick={() => handleUpdateProduct(product)}>
+                          Actualizar
+                        </button>
+                        <button onClick={() => deleteProduct(product._id)}>
+                          Borrar
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
+
+            
             {!loading && products.length === 0 && !error && (
               <p>No hay productos disponibles.</p>
             )}

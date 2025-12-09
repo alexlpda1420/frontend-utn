@@ -22,10 +22,10 @@ const Login = () => {
         },
         body: JSON.stringify(dataForm)
       })
-      const responseData = await response.json()
+      const responseData = await response.json().catch(() => ({}))
 
-      if (responseData.error) {
-        alert(responseData.error)
+      if (!response.ok || responseData.success === false) {
+        alert(responseData.error || "Error al iniciar sesión")
         return
       }
 
@@ -34,6 +34,7 @@ const Login = () => {
 
     } catch (error) {
       console.log(error)
+      alert("Error al iniciar sesión")
     }
   }
 
@@ -51,8 +52,8 @@ const Login = () => {
         <h1>Login</h1>
 
         <form className="contact-form" onSubmit={handleSubmit}>
-          <input type="email" placeholder="Email" name="email" onChange={handleChange} />
-          <input type="password" placeholder="Contraseña" name="password" onChange={handleChange} />
+          <input type="email" placeholder="Email" name="email" onChange={handleChange} required />
+          <input type="password" placeholder="Contraseña" name="password" onChange={handleChange} required/>
           <button type="submit" >Iniciar Sesión</button>
         </form>
 

@@ -31,7 +31,8 @@ const Register = () => {
         },
         body: JSON.stringify(formData)
       })
-      const responseData = await response.json()
+
+      const responseData = await response.json().catch(() => ({}))
 
       if (!response.ok || !responseData.success) {
         alert(responseData.error || "Error al registrar el usuario")
@@ -41,7 +42,8 @@ const Register = () => {
       alert("✅ Usuario creado con éxito")
       navigate("/login")
     } catch (error) {
-      console.log("error al registrar el usuario")
+      console.log("Error al registrar el usuario:", error)
+       alert("Error al registrar el usuario")
     }
   }
 
@@ -52,8 +54,8 @@ const Register = () => {
         <h1>Registro</h1>
 
         <form className="contact-form" onSubmit={handleSubmit}>
-          <input type="email" placeholder="Email" name="email" onChange={handleChange} />
-          <input type="password" placeholder="Contraseña" name="password" onChange={handleChange} />
+          <input type="email" placeholder="Email" name="email" onChange={handleChange} required/>
+          <input type="password" placeholder="Contraseña" name="password" onChange={handleChange}required />
           <button type="submit">Crear Cuenta</button>
         </form>
 

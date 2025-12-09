@@ -27,14 +27,20 @@ export default function Contact() {
         },
         body: JSON.stringify(form)
       })
-      const dataResponse = await response.json()
+      const dataResponse = await response.json().catch(() => ({}))
 
-      console.log(dataResponse)
-      alert("✅ Formulario enviado con éxito")
+      if (!response.ok || dataResponse.success === false) {
+        console.error("Error backend contacto:", dataResponse)
+        alert(dataResponse.error || "❌ Error al enviar el formulario")
+        return
+      }
+
+      alert(dataResponse.message || "✅ Formulario enviado con éxito")
       navigate("/")
 
     } catch (error) {
-      console.log(error)
+      console.error("Error al enviar el formulario:", error)
+      alert("❌ Error al enviar el formulario")
     }
   };
 
@@ -50,6 +56,7 @@ export default function Contact() {
           <input
             type="email"
             name="email"
+            required
             value={form.email}
             onChange={handleChange}
           />
@@ -60,6 +67,7 @@ export default function Contact() {
           <input
             type="text"
             name="subject"
+            required
             value={form.subject}
             onChange={handleChange}
           />
@@ -69,6 +77,7 @@ export default function Contact() {
           <label>Mensaje</label>
           <textarea
             name="message"
+            required
             rows="4"
             value={form.message}
             onChange={handleChange}
