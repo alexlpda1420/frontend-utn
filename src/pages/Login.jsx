@@ -2,6 +2,7 @@ import { useState } from "react";
 import Layout from "../components/Layout";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2"
 
 // Login.jsx
 const Login = () => {
@@ -25,16 +26,33 @@ const Login = () => {
       const responseData = await response.json().catch(() => ({}))
 
       if (!response.ok || responseData.success === false) {
-        alert(responseData.error || "Error al iniciar sesión")
+         Swal.fire({
+          icon: "error",
+          title: "Error al iniciar sesión",
+          text: responseData.error || "Revisa tu correo y contraseña."
+        })
         return
       }
 
       login(responseData.token)
+
+      await Swal.fire({
+        icon: "success",
+        title: "Sesión iniciada",
+        text: "Inicio de sesión exitoso.",
+        timer: 1500,
+        showConfirmButton: false
+      })
+
       navigateUser("/")
 
     } catch (error) {
       console.log(error)
-      alert("Error al iniciar sesión")
+        Swal.fire({
+        icon: "error",
+        title: "Error de conexión",
+        text: "No se pudo conectar con el servidor."
+      })
     }
   }
 

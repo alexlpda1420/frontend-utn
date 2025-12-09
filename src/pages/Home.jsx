@@ -4,6 +4,7 @@ import UpdateProduct from "../components/UpdateProduct";
 import { useAuth } from "../context/AuthContext";
 import { CATEGORIES } from "../constants/categories.js";
 import { ToastMessage } from "../components/ToastMessage.jsx";
+import Swal from "sweetalert2"
 
 
 
@@ -37,15 +38,28 @@ const Home = () => {
     } catch (error) {
       console.log(error);
       setError("Error al traer los productos");
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "No se pudieron cargar los productos."
+      })
+
     } finally {
       setLoading(false);
     }
   };
 
   const deleteProduct = async (idProduct) => {
-    if (!confirm("¿Estás seguro de que quieres borrar el producto?")) return
+    const result = await Swal.fire({
+      title: "¿Eliminar producto?",
+      text: "Esta acción no se puede deshacer.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sí, borrar",
+      cancelButtonText: "Cancelar"
+    })
 
-
+    if (!result.isConfirmed) return
 
     try {
 
@@ -59,21 +73,35 @@ const Home = () => {
       const dataResponse = await response.json()
 
       if (!response.ok || dataResponse.success === false) {
-        alert(dataResponse.error || "Error al borrar el producto")
+           Swal.fire({
+          icon: "error",
+          title: "Error al borrar",
+          text: dataResponse.error || "No se pudo borrar el producto."
+        })
         return
       }
 
       setProducts((prev) => prev.filter((p) => p._id !== idProduct))
 
-      // si tu backend devuelve message, usamos eso
-      alert(dataResponse.message || "Producto borrado con éxito")
+        await Swal.fire({
+        icon: "success",
+        title: "Producto borrado",
+        text: dataResponse.message || "El producto se eliminó correctamente.",
+        timer: 1500,
+        showConfirmButton: false
+      })
     } catch (error) {
       console.error(error)
       setError("Error al borrar el producto")
+       Swal.fire({
+        icon: "error",
+        title: "Error de conexión",
+        text: "No se pudo conectar con el servidor."
+      })
 
     }
   }
-  
+
   useEffect(() => {
     fetchingProducts();
   }, []);
@@ -151,11 +179,11 @@ const Home = () => {
           </form>
         </section>
 
-       {/* GRID DE PRODUCTOS */}
+        {/* GRID DE PRODUCTOS */}
         <section className="product-grid">
           <h2>Listado de Productos</h2>
 
-          
+
           {loading && <p>Cargando productos...</p>}
           {error && <p>Error al cargar los productos</p>}
 
@@ -214,7 +242,7 @@ const Home = () => {
                 )
               })}
 
-            
+
             {!loading && products.length === 0 && !error && (
               <p>No hay productos disponibles.</p>
             )}

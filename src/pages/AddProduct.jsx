@@ -2,6 +2,7 @@ import { useState } from "react"
 import Layout from "../components/Layout"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
+import Swal from "sweetalert2"
 
 const AddProduct = () => {
   const [formData, setFormData] = useState({
@@ -59,11 +60,21 @@ const AddProduct = () => {
 
       if (!response.ok || responseData.success === false) {
         console.log("Error backend:", responseData)
-        alert(responseData.error || "❌ Error al cargar el producto")
+         Swal.fire({
+          icon: "error",
+          title: "Error al cargar el producto",
+          text: responseData.error || "Revisá los datos ingresados.",
+        })
         return
       }
 
-      alert("✅ Producto agregado con éxito")
+       await Swal.fire({
+        icon: "success",
+        title: "Producto agregado",
+        text: "El producto se creó correctamente.",
+        timer: 1500,
+        showConfirmButton: false,
+      })
 
       setFormData({
         name: "",

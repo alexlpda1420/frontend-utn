@@ -1,5 +1,7 @@
 import { useState } from "react"
 import { useAuth } from "../context/AuthContext"
+import Swal from "sweetalert2"
+
 
 const UpdateProduct = ({ product, onClose, onUpdate }) => {
   const [loader, setLoader] = useState(false)
@@ -43,18 +45,35 @@ const UpdateProduct = ({ product, onClose, onUpdate }) => {
 
       if (!response.ok || responseData.success === false) {
         console.error("Error backend al actualizar:", responseData)
-        alert(responseData.error || "Error al actualizar el producto")
+        Swal.fire({
+          icon: "error",
+          title: "Error al actualizar",
+          text: responseData.error || "No se pudo actualizar el producto."
+        })
         return
       }
 
       // refresca lista en Home
       onUpdate()
+
+      await Swal.fire({
+        icon: "success",
+        title: "Producto actualizado",
+        text: "Los cambios se guardaron correctamente.",
+        timer: 1500,
+        showConfirmButton: false
+      })
+
       // cierra modal
       onClose()
 
     } catch (error) {
       console.error("Error al actualizar producto:", error)
-      alert("Error al actualizar el producto")
+      Swal.fire({
+        icon: "error",
+        title: "Error de conexión",
+        text: "No se pudo conectar con el servidor."
+      })
     } finally {
       setLoader(false)
     }

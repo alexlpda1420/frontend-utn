@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Layout from "../components/Layout";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2"
 
 export default function Contact() {
   const [form, setForm] = useState({
@@ -31,16 +32,30 @@ export default function Contact() {
 
       if (!response.ok || dataResponse.success === false) {
         console.error("Error backend contacto:", dataResponse)
-        alert(dataResponse.error || "❌ Error al enviar el formulario")
+        Swal.fire({
+          icon: "error",
+          title: "Error al enviar",
+          text: dataResponse.error || "No se pudo enviar el formulario."
+        })
         return
       }
 
-      alert(dataResponse.message || "✅ Formulario enviado con éxito")
+      await Swal.fire({
+        icon: "success",
+        title: "Mensaje enviado",
+        text: dataResponse.message || "Formulario enviado con éxito.",
+        timer: 1500,
+        showConfirmButton: false
+      })
       navigate("/")
 
     } catch (error) {
       console.error("Error al enviar el formulario:", error)
-      alert("❌ Error al enviar el formulario")
+      Swal.fire({
+        icon: "error",
+        title: "Error de conexión",
+        text: "No se pudo conectar con el servidor."
+      })
     }
   };
 

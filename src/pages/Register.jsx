@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Layout from "../components/Layout";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2"
 
 // Register.jsx
 const Register = () => {
@@ -35,15 +36,29 @@ const Register = () => {
       const responseData = await response.json().catch(() => ({}))
 
       if (!response.ok || !responseData.success) {
-        alert(responseData.error || "Error al registrar el usuario")
+        Swal.fire({
+          icon: "error",
+          title: "Error al registrarse",
+          text: responseData.error || "No se pudo crear el usuario."
+        })
         return
       }
 
-      alert("✅ Usuario creado con éxito")
+      await Swal.fire({
+        icon: "success",
+        title: "Usuario creado",
+        text: "Tu cuenta fue creada con éxito.",
+        timer: 1500,
+        showConfirmButton: false
+      })
       navigate("/login")
     } catch (error) {
       console.log("Error al registrar el usuario:", error)
-       alert("Error al registrar el usuario")
+       Swal.fire({
+        icon: "error",
+        title: "Error de conexión",
+        text: "No se pudo conectar con el servidor."
+      })
     }
   }
 
@@ -54,8 +69,8 @@ const Register = () => {
         <h1>Registro</h1>
 
         <form className="contact-form" onSubmit={handleSubmit}>
-          <input type="email" placeholder="Email" name="email" onChange={handleChange} required/>
-          <input type="password" placeholder="Contraseña" name="password" onChange={handleChange}required />
+          <input type="email" placeholder="Email" name="email" onChange={handleChange} required />
+          <input type="password" placeholder="Contraseña" name="password" onChange={handleChange} required />
           <button type="submit">Crear Cuenta</button>
         </form>
 
