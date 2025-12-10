@@ -70,43 +70,37 @@ button {
 /* =========================================================
    HEADER / NAVBAR
    ========================================================= */
+
 header {
-  background: radial-gradient(circle at top, #020617, #020617 40%, #020617);
-  border-bottom: 1px solid rgba(15, 23, 42, 0.9);
   position: sticky;
   top: 0;
-  z-index: 30;
+  z-index: 50;
+  background: rgba(15, 23, 42, 0.96);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.35);
 }
 
 header nav {
-  max-width: var(--max-width);
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 0.9rem 1.5rem;
+  padding: 0.8rem 1.5rem;
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap;
+  justify-content: center;
   align-items: center;
-}
-
-header nav .logo {
-  font-size: 1.05rem;
-  font-weight: 600;
-  color: #e5e7eb;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-header nav .nav-links {
-  display: flex;
-  gap: 1.5rem;
+  gap: 0.8rem 1.5rem;
 }
 
 header nav a {
-  color: #d1d5db;
+  text-decoration: none;
+  color: #e5e7eb;
   font-size: 0.95rem;
-  font-weight: 500;
+  letter-spacing: 0.02em;
   position: relative;
   padding-bottom: 0.2rem;
-  transition: color var(--transition-fast);
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
 header nav a::after {
@@ -117,17 +111,75 @@ header nav a::after {
   width: 0;
   height: 2px;
   border-radius: 999px;
-  background: var(--primary);
-  transition: width var(--transition-fast);
+  background: linear-gradient(90deg, #0ea5e9, #22c55e);
+  transition: width 0.2s ease;
 }
 
 header nav a:hover {
-  color: #f9fafb;
+  color: #38bdf8;
+  transform: translateY(-1px);
 }
 
 header nav a:hover::after {
   width: 100%;
 }
+
+header nav button {
+  border: 1px solid rgba(239, 68, 68, 0.8);
+  background: rgba(239, 68, 68, 0.1);
+  color: #fecaca;
+  border-radius: 999px;
+  padding: 0.35rem 0.9rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+header nav button:hover {
+  background: rgba(239, 68, 68, 0.25);
+  transform: translateY(-1px);
+  box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.4);
+}
+/* Marca (logo + texto) a la izquierda */
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+}
+
+.navbar-logo {
+  width: 38px;
+  height: auto;
+  border-radius: 10px;
+}
+
+.navbar-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #e5e7eb;
+}
+
+/* Links a la derecha, en fila */
+.nav-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+/* Ajuste: logo a la izquierda, links a la derecha */
+header nav {
+  justify-content: space-between;
+}
+
+
 
 /* =========================================================
    MAIN + LAYOUT GENERAL
@@ -155,13 +207,18 @@ main {
 /* =========================================================
    FOOTER
    ========================================================= */
+
 footer {
-  background-color: #020617;
+  border-top: 1px solid rgba(148, 163, 184, 0.35);
+  background: radial-gradient(circle at top, #020617, #020617);
   text-align: center;
   padding: 1rem 0;
-  color: var(--text-muted);
-  border-top: 1px solid rgba(15, 23, 42, 0.95);
+  color: #9ca3af;
   font-size: 0.85rem;
+}
+
+footer p {
+  margin: 0;
 }
 
 /* =========================================================
