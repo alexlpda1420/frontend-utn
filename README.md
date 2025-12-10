@@ -18,7 +18,7 @@
 - **Nombre:** Alexis Esteban Roldan  
 - **Proyecto:** ShopLink – Frontend  
 - **Rol:** Estudiante de Desarrollo Full Stack / Responsable de Soporte Interno IT  
-- **Email de contacto:** alexis.roldan@hasar.com  
+- **Email de contacto:** a.eroldan@hotmail.com
 - **GitHub:** [@alexlpda1420](https://github.com/alexlpda1420)  
 - **LinkedIn:** [Alexis Esteban Roldan](https://www.linkedin.com/in/alexis-esteban-roldan/)
 
@@ -95,7 +95,7 @@ FRONTEND-UTN/
 │  │  ├─ AddProduct.jsx
 │  │  ├─ UpdateProduct.jsx
 │  │  ├─ Profile.jsx
-│  │  ├─ Cart.jsx          # placeholder / futura funcionalidad
+│  │  ├─ Cart.jsx         
 │  │  └─ NotFound.jsx
 │  ├─ router/
 │  │  └─ Router.jsx
@@ -104,7 +104,7 @@ FRONTEND-UTN/
 │  ├─ styles/
 │  │  └─ index.css
 │  ├─ main.jsx
-│  └─ App.jsx              # si aplica
+│  └─ App.jsx             
 ├─ .gitignore
 ├─ index.html
 ├─ package.json
@@ -300,7 +300,6 @@ Página descriptiva del proyecto ShopLink:
 
 ## 🌐 Consumo de la API
 
-- `src/services/api.js` centraliza el `baseURL` de la API.
 - El frontend utiliza `fetch` para:
 
   - `GET /products?queryParams`  
@@ -322,26 +321,6 @@ Página descriptiva del proyecto ShopLink:
     Envío de mensajes desde el formulario de contacto.
 
 - La URL base del backend se toma desde variable de entorno (`VITE_API_URL`).
-
----
-
-## ⚙️ Variables de entorno (Frontend)
-
-Crear un archivo `.env` en la raíz del frontend:
-
-```bash
-VITE_API_URL=https://backend-utn-1gp5.onrender.com
-```
-
-En el código:
-
-```js
-const API_URL = import.meta.env.VITE_API_URL
-```
-
-> ⚠️ **Importante:**  
-> - No commitear `.env`.  
-> - Incluir un `.env.example` con las claves necesarias para que cualquier persona pueda configurar el proyecto.
 
 ---
 
