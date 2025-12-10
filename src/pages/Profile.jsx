@@ -1,49 +1,99 @@
-
-import Layout from "../components/Layout";
-import { useAuth } from "../context/AuthContext";
+import Layout from "../components/Layout"
+import { useAuth } from "../context/AuthContext"
+import ShopLinkLogo from "../assets/images/ShopLink-Logo.png"
 
 const Profile = () => {
-  const { user } = useAuth();
+  const { user } = useAuth()
 
-  // Por si alguien entra a /perfil sin estar logueado
-  if (!user) {
-    return (
-      <Layout>
-        <div className="profile-container">
-          <div className="profile-card">
-            <h1>Mi perfil</h1>
-            <p>No hay sesión activa.</p>
-            <p>Iniciá sesión para ver tu perfil.</p>
-          </div>
-        </div>
-      </Layout>
-    );
-  }
-
-  const email = user.email || "";
-  const username = email ? email.split("@")[0] : "usuario";
+  // Lo que realmente tenés en el contexto hoy: email
+  const email = user?.email || "usuario@shoplink.com"
+  const username = email.split("@")[0]
+  const initial = username.charAt(0).toUpperCase()
 
   return (
     <Layout>
-      <div className="profile-container">
-        <div className="profile-card">
-          <h1>Mi Perfil</h1>
+      <section className="profile">
+        {/* Encabezado con logo */}
+        <div className="profile-header">
+          <div className="profile-logo">
+            <img src={ShopLinkLogo} alt="Logo ShopLink" />
+          </div>
 
-          <p>
-            <span className="profile-label">Usuario:</span> {username}
-          </p>
-          <p>
-            <span className="profile-label">Email:</span> {email}
-          </p>
-
-          {/* Si más adelante guardás más datos en el contexto, los agregás acá */}
-          <p>
-            <span className="profile-label">Rol:</span> Usuario de ShopLink
-          </p>
+          <div className="profile-title">
+            <h1>Mi Perfil</h1>
+            <p>
+              Este es tu espacio dentro de ShopLink. Acá ves tus datos como usuario
+              del sistema y el rol que cumplís en el proyecto para gestionar el
+              catálogo de productos.
+            </p>
+          </div>
         </div>
-      </div>
-    </Layout>
-  );
-};
 
-export default Profile;
+        <div className="profile-content">
+          {/* Tarjeta principal */}
+          <div className="profile-main-card">
+            <div className="profile-avatar">
+              <span>{initial}</span>
+            </div>
+
+            <div className="profile-main-info">
+              <h2>{username}</h2>
+              <p className="profile-email">{email}</p>
+              <span className="profile-badge">Administrador de productos</span>
+            </div>
+          </div>
+
+          {/* Grid de info */}
+          <div className="profile-grid">
+            <article className="profile-info-card">
+              <h3>Datos de la cuenta</h3>
+              <ul>
+                <li>
+                  <span>Correo:</span>
+                  <span>{email}</span>
+                </li>
+                <li>
+                  <span>Usuario:</span>
+                  <span>{username}</span>
+                </li>
+                <li>
+                  <span>Rol:</span>
+                  <span>Usuario de ShopLink</span>
+                </li>
+                <li>
+                  <span>Estado:</span>
+                  <span className="status-active">Activo</span>
+                </li>
+              </ul>
+            </article>
+
+            <article className="profile-info-card">
+              <h3>Uso dentro del proyecto</h3>
+              <p>
+                Este usuario se utiliza para probar el flujo completo de la API REST:
+                registro, login con JWT, acceso a rutas protegidas y operaciones CRUD
+                sobre el catálogo de productos desde el frontend.
+              </p>
+              <p className="profile-note">
+                Podés crear productos de prueba, actualizarlos y eliminarlos para
+                demostrar todas las operaciones del trabajo práctico.
+              </p>
+            </article>
+
+            <article className="profile-info-card">
+              <h3>Stack técnico asociado</h3>
+              <ul>
+                <li>Autenticación con JWT y contraseñas hasheadas con bcrypt.</li>
+                <li>Estado de sesión manejado con Context API en React.</li>
+                <li>Rutas protegidas en el frontend según si el usuario está logueado.</li>
+                <li>SweetAlert2 para feedback de inicio de sesión y acciones clave.</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+    </Layout>
+  )
+}
+
+export default Profile
