@@ -918,3 +918,45 @@ footer {
   }
 }
 
+.hero {
+  margin-bottom: 1.5rem;
+  display: flex;              /* centramos el bloque interno */
+  justify-content: center;    /* lo llevamos al centro horizontal del banner */
+}
+
+/* Contenedor interno del logo + texto */
+.hero-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1rem;
+  width: 100%;
+  max-width: 720px;          /* ancho máximo del bloque centrado */
+  margin: 0 auto;            /* por las dudas, doble seguro de centrado */
+}
+
+/* Logo más grande */
+.hero-logo {
+  max-width: 260px;
+  width: 100%;
+  height: auto;
+}
+
+.hero-description {
+  max-width: 620px;
+  font-size: 1rem;
+}
+
+.hero-user {
+  margin-top: 0.4rem;
+  font-size: 0.95rem;
+  opacity: 0.9;
+}
+
+@media (max-width: 768px) {
+  .hero-description {
+    font-size: 0.95rem;
+  }
+}
+

@@ -38,7 +38,7 @@ const Profile = () => {
 
           {/* Si más adelante guardás más datos en el contexto, los agregás acá */}
           <p>
-            <span className="profile-label">Rol:</span> Usuario de la tienda
+            <span className="profile-label">Rol:</span> Usuario de ShopLink
           </p>
         </div>
       </div>

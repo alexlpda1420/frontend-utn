@@ -4,37 +4,37 @@ import UpdateProduct from "../components/UpdateProduct";
 import { useAuth } from "../context/AuthContext";
 import { CATEGORIES } from "../constants/categories.js";
 import { ToastMessage } from "../components/ToastMessage.jsx";
-import Swal from "sweetalert2"
-
-
+import Swal from "sweetalert2";
+import ShopLinkLogo from "../assets/images/ShopLink-Logo.png"; 
 
 const Home = () => {
   const [products, setProducts] = useState([]);
-  const { user, token } = useAuth()
+  const { user, token } = useAuth();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedProduct, setSelectedProduct] = useState(null)
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const [filters, setFilters] = useState({
     name: "",
     stock: "",
     category: "",
     minPrice: "",
     maxPrice: ""
-  })
+  });
 
   const fetchingProducts = async (query = "") => {
-    setError(null)
-    setLoading(true)
+    setError(null);
+    setLoading(true);
     try {
-
-      const response = await fetch(`https://backend-utn-1gp5.onrender.com/products?${query}`);
+      const response = await fetch(
+        `https://backend-utn-1gp5.onrender.com/products?${query}`
+      );
       const dataProducts = await response.json();
 
       if (!response.ok || dataProducts.success === false) {
         throw new Error("Error al traer los productos");
       }
 
-      setProducts(dataProducts.data.reverse());  // tu API devuelve { data: [...] }
+      setProducts(dataProducts.data.reverse());
     } catch (error) {
       console.log(error);
       setError("Error al traer los productos");
@@ -42,8 +42,7 @@ const Home = () => {
         icon: "error",
         title: "Error",
         text: "No se pudieron cargar los productos."
-      })
-
+      });
     } finally {
       setLoading(false);
     }
@@ -57,66 +56,66 @@ const Home = () => {
       showCancelButton: true,
       confirmButtonText: "Sí, borrar",
       cancelButtonText: "Cancelar"
-    })
+    });
 
-    if (!result.isConfirmed) return
+    if (!result.isConfirmed) return;
 
     try {
-
-      const response = await fetch(`https://backend-utn-1gp5.onrender.com/products/${idProduct}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`
+      const response = await fetch(
+        `https://backend-utn-1gp5.onrender.com/products/${idProduct}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         }
-      })
+      );
 
-      const dataResponse = await response.json()
+      const dataResponse = await response.json();
 
       if (!response.ok || dataResponse.success === false) {
-           Swal.fire({
+        Swal.fire({
           icon: "error",
           title: "Error al borrar",
           text: dataResponse.error || "No se pudo borrar el producto."
-        })
-        return
+        });
+        return;
       }
 
-      setProducts((prev) => prev.filter((p) => p._id !== idProduct))
+      setProducts((prev) => prev.filter((p) => p._id !== idProduct));
 
-        await Swal.fire({
+      await Swal.fire({
         icon: "success",
         title: "Producto borrado",
         text: dataResponse.message || "El producto se eliminó correctamente.",
         timer: 1500,
         showConfirmButton: false
-      })
+      });
     } catch (error) {
-      console.error(error)
-      setError("Error al borrar el producto")
-       Swal.fire({
+      console.error(error);
+      setError("Error al borrar el producto");
+      Swal.fire({
         icon: "error",
         title: "Error de conexión",
         text: "No se pudo conectar con el servidor."
-      })
-
+      });
     }
-  }
+  };
 
   useEffect(() => {
     fetchingProducts();
   }, []);
 
   const handleUpdateProduct = (product) => {
-    console.log(product, "producto a actualizar")
-    setSelectedProduct(product)
-  }
+    setSelectedProduct(product);
+  };
 
   const handleChange = (e) => {
     setFilters({
       ...filters,
       [e.target.name]: e.target.value
-    })
-  }
+    });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -126,8 +125,10 @@ const Home = () => {
     if (filters.name.trim() !== "") query.append("name", filters.name.trim());
     if (filters.stock !== "") query.append("stock", Number(filters.stock));
     if (filters.category !== "") query.append("category", filters.category);
-    if (filters.minPrice !== "") query.append("minPrice", Number(filters.minPrice));
-    if (filters.maxPrice !== "") query.append("maxPrice", Number(filters.maxPrice));
+    if (filters.minPrice !== "")
+      query.append("minPrice", Number(filters.minPrice));
+    if (filters.maxPrice !== "")
+      query.append("maxPrice", Number(filters.maxPrice));
 
     fetchingProducts(query.toString());
   };
@@ -139,50 +140,101 @@ const Home = () => {
       category: "",
       minPrice: "",
       maxPrice: ""
-    })
-    fetchingProducts()
-  }
+    });
+    fetchingProducts();
+  };
 
   return (
     <Layout>
       <div className="home-container">
+        {/* HERO con logo de ShopLink */}
+        <section className="banner hero">
+          <div className="hero-content hero-centered">
+            <img
+              src={ShopLinkLogo}
+              alt="Logo de ShopLink"
+              className="hero-logo"
+            />
+            <p className="hero-description">
+              La forma más simple y tecnológica de conectar tus productos con las
+              personas correctas. Gestioná tu catálogo, filtrá en tiempo real y
+              mantené tu inventario siempre bajo control.
+            </p>
 
-        {/* BANNER */}
-        <section className="banner">
-          <h1>Nuestros Productos</h1>
+            {user && (
+              <p className="hero-user">
+                Hola <strong>{user.id}</strong>, este es tu panel para administrar
+                todo lo que ofrece ShopLink.
+              </p>
+            )}
+          </div>
         </section>
+
 
         {/* TEXTO DESCRIPTIVO */}
         <section className="intro">
           <p>
-            Bienvenido {user && user.id} En nuestra tienda encontrarás productos seleccionados con cuidado y dedicación.
-            Ofrecemos calidad, variedad y un enfoque pensado para brindarte la mejor experiencia.
-            Este es solo un texto de ejemplo hasta conectar la API real.
+            En ShopLink encontrarás un catálogo pensado para crecer: productos
+            organizados por categoría, filtros por precio y stock, y herramientas
+            para que la experiencia sea ágil tanto para quien compra como para
+            quien administra. Explorá, probá los filtros y dejá que la
+            plataforma trabaje por vos.
           </p>
         </section>
 
+        {/* FILTROS */}
         <section>
           <form className="filters-form" onSubmit={handleSubmit}>
-            <input type="text" name="name" placeholder="Buscar por nombre" onChange={handleChange} value={filters.name} />
-            <input type="number" name="stock" placeholder="Ingrese el stock" onChange={handleChange} value={filters.stock} />
-            <select name="category" onChange={handleChange} value={filters.category}>
+            <input
+              type="text"
+              name="name"
+              placeholder="Buscar por nombre"
+              onChange={handleChange}
+              value={filters.name}
+            />
+            <input
+              type="number"
+              name="stock"
+              placeholder="Ingrese el stock"
+              onChange={handleChange}
+              value={filters.stock}
+            />
+            <select
+              name="category"
+              onChange={handleChange}
+              value={filters.category}
+            >
               <option value="">Todas las categorías</option>
-              {
-                CATEGORIES.map((category) => <option key={category.id} value={category.value}>{category.content}</option>)
-              }
+              {CATEGORIES.map((category) => (
+                <option key={category.id} value={category.value}>
+                  {category.content}
+                </option>
+              ))}
             </select>
-            <input type="number" name="minPrice" placeholder="Precio mínimo" onChange={handleChange} value={filters.minPrice} />
-            <input type="number" name="maxPrice" placeholder="Precio máximo" onChange={handleChange} value={filters.maxPrice} />
+            <input
+              type="number"
+              name="minPrice"
+              placeholder="Precio mínimo"
+              onChange={handleChange}
+              value={filters.minPrice}
+            />
+            <input
+              type="number"
+              name="maxPrice"
+              placeholder="Precio máximo"
+              onChange={handleChange}
+              value={filters.maxPrice}
+            />
             <button type="submit">Aplicar filtros</button>
-            <button type="button" onClick={handleResetFilters}>Cancelar</button>
-
+            <button type="button" onClick={handleResetFilters}>
+              Cancelar
+            </button>
           </form>
         </section>
 
         {/* GRID DE PRODUCTOS */}
         <section className="product-grid">
           <h2>Listado de Productos</h2>
-
 
           {loading && <p>Cargando productos...</p>}
           {error && <p>Error al cargar los productos</p>}
@@ -202,7 +254,7 @@ const Home = () => {
                 const hasImage =
                   product.image &&
                   typeof product.image === "string" &&
-                  product.image.startsWith("uploads/")
+                  product.image.startsWith("uploads/");
 
                 return (
                   <div key={product._id} className="product-card">
@@ -233,28 +285,26 @@ const Home = () => {
                         <button onClick={() => handleUpdateProduct(product)}>
                           Actualizar
                         </button>
-                        <button onClick={() => deleteProduct(product._id)}>
+                        <button
+                          onClick={() => deleteProduct(product._id)}
+                        >
                           Borrar
                         </button>
                       </div>
                     )}
                   </div>
-                )
+                );
               })}
-
 
             {!loading && products.length === 0 && !error && (
               <p>No hay productos disponibles.</p>
             )}
           </div>
         </section>
-
       </div>
 
       {error && <ToastMessage error={error} color={"red"} />}
-
     </Layout>
-
   );
 };
 
