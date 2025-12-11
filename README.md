@@ -17,7 +17,7 @@
 
 - **Nombre:** Alexis Esteban Roldan  
 - **Proyecto:** ShopLink – Frontend  
-- **Rol:** Estudiante de Desarrollo Full Stack / Responsable de Soporte Interno IT  
+- **Rol:** Estudiante de Desarrollo Full Stack
 - **Email de contacto:** a.eroldan@hotmail.com
 - **GitHub:** [@alexlpda1420](https://github.com/alexlpda1420)  
 - **LinkedIn:** [Alexis Esteban Roldan](https://www.linkedin.com/in/alexis-esteban-roldan/)
@@ -320,8 +320,6 @@ Página descriptiva del proyecto ShopLink:
   - `POST /email/send`  
     Envío de mensajes desde el formulario de contacto.
 
-- La URL base del backend se toma desde variable de entorno (`VITE_API_URL`).
-
 ---
 
 ## 🧪 Scripts disponibles
@@ -362,11 +360,10 @@ npm run preview
 
 - **Frontend:** desplegado en **Vercel**.
 - Pasos clave:
+  
   1. Subir el repositorio a GitHub.
   2. Importar el proyecto en Vercel.
-  3. Configurar la variable `VITE_API_URL` en **Project Settings → Environment Variables**.
-  4. Verificar que la opción de **SPA / Single Page Application** tenga fallback a `index.html` (para rutas internas).
-
+     
 ---
 
 ## ✅ Buenas prácticas aplicadas
